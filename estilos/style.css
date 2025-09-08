@@ -191,20 +191,29 @@ footer {
     padding: 1em 0;
     z-index: 100;
 }
+
 /* ========================
-   FORMULARIOS (Login y Registro)
+   FORMULARIO REGISTRO
 ======================== */
-.form-container {
-  max-width: 400px;
-  margin: 5rem auto;
+.registro-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem auto;
+  padding: 1rem;
+}
+
+.registro-card {
+  max-width: 500px;
+  width: 100%;
   background: #1a1a1a;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   border: 1px solid #333;
 }
 
-.form-container h2 {
+.registro-card h2 {
   text-align: center;
   color: #ffffff;
   margin-bottom: 1.5rem;
@@ -213,19 +222,20 @@ footer {
   padding-bottom: 0.5rem;
 }
 
-.form-container form {
+.registro-card form {
   display: flex;
   flex-direction: column;
 }
 
-.form-container label {
+.registro-card label {
   color: #ccc;
   margin-bottom: 6px;
   font-size: 0.9rem;
 }
 
-.form-container input,
-.form-container select {
+.registro-card input,
+.registro-card select,
+.registro-card textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 1.2rem;
@@ -236,16 +246,18 @@ footer {
   font-size: 1rem;
   transition: all 0.3s ease;
   box-sizing: border-box;
+  resize: none;
 }
 
-.form-container input:focus,
-.form-container select:focus {
+.registro-card input:focus,
+.registro-card select:focus,
+.registro-card textarea:focus {
   border-color: #0d6efd;
   outline: none;
-  box-shadow: 0 0 8px rgba(13, 110, 253, 0.6);
+  box-shadow: 0 0 8px rgba(13,110,253,0.6);
 }
 
-.form-container button {
+.registro-card button {
   width: 100%;
   padding: 12px;
   background: #0d6efd;
@@ -258,10 +270,32 @@ footer {
   transition: background 0.3s ease, transform 0.2s;
 }
 
-.form-container button:hover {
+.registro-card button:hover {
   background: #0b5ed7;
   transform: scale(1.02);
 }
+
+/* Alertas */
+.alert {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.alert.error {
+  background: rgba(255, 0, 0, 0.15);
+  border: 1px solid red;
+  color: #ff8080;
+}
+
+.alert.success {
+  background: rgba(0, 255, 100, 0.15);
+  border: 1px solid #00ff6a;
+  color: #9effc1;
+}
+
 
 /* ========================
    FORMULARIO LOGIN
@@ -319,3 +353,5 @@ footer {
   background: #0b5ed7;
   transform: scale(1.02);
 }
+
+
