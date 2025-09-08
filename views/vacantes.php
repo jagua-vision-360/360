@@ -94,7 +94,7 @@ $vacantes = [
         }
 
         /* ========================
-           ESTILOS DEL FORMULARIO DE VACANTES
+           ESTILOS DEL FORMULARIO DE VACANTES leonela
         ======================== */
         .form-card {
             background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
@@ -108,7 +108,7 @@ $vacantes = [
         .form-title {
             color: #ffffff;
             font-size: 1.8rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 2.2rem;
             text-align: center;
         }
