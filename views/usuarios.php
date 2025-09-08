@@ -2,8 +2,7 @@
   <div class="registro-card">
     <div class="registro-header">
       <!-- Aquí va tu logo -->
-      <div class="logo-placeholder">[JV360]</div>
-      <h2>Registrar Usuario</h2>
+          <h2>Registro de Usuario</h2>
     </div>
 
     <form method="POST" action="controllers/UsuariosController.php">
@@ -42,6 +41,7 @@
         <div class="form-group">
           <label>Tipo</label>
           <select name="tipo_usuario" required>
+            <option value="">Selecciona...</option>
             <option value="persona_natural">Persona natural</option>
             <option value="empresa">Empresa</option>
             <option value="aspirante">Aspirante</option>
@@ -76,56 +76,61 @@
 /* ========================
    FORMULARIO REGISTRO
 ======================== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #121212;
+  margin: 0;
+  padding: 0;
+}
+
 .registro-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 3rem auto;
-  padding: 1rem;
+  padding: 3rem 1rem;
 }
 
 .registro-card {
-  max-width: 700px;
+  max-width: 720px;
   width: 100%;
-  background: #1a1a1a;
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  border: 1px solid #333;
+  background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+  padding: 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+  border: 1px solid #2f2f2f;
+  animation: fadeIn 0.6s ease;
 }
 
 .registro-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.2rem;
   gap: 1rem;
 }
 
 .registro-header h2 {
-  color: #fff;
-  font-size: 1.6rem;
-  border-left: 2px solid #0d6efd;
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 600;
+  border-left: 
   padding-left: 1rem;
 }
 
-.logo-placeholder {
-  width: 60px;
-  height: 60px;
-  background: #333;
+.registro-logo {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #888;
-  font-size: 0.7rem;
+  background: #2d2d2d;
+  padding: 6px;
   border: 1px solid #444;
 }
 
 .registro-card form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .form-row {
@@ -140,19 +145,20 @@
 }
 
 .registro-card label {
-  color: #ccc;
-  margin-bottom: 5px;
-  font-size: 0.9rem;
+  color: #bbb;
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+  font-weight: 500;
 }
 
 .registro-card input,
 .registro-card select {
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #444;
-  border-radius: 8px;
-  background-color: #262626;
-  color: #f0f0f0;
-  font-size: 0.95rem;
+  border-radius: 10px;
+  background-color: #1c1c1c;
+  color: #f5f5f5;
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
@@ -160,24 +166,39 @@
 .registro-card select:focus {
   border-color: #0d6efd;
   outline: none;
-  box-shadow: 0 0 6px rgba(13,110,253,0.6);
+  box-shadow: 0 0 8px rgba(13,110,253,0.7);
 }
 
 .registro-card button {
-  margin-top: 1rem;
-  padding: 12px;
-  background: #0d6efd;
+  margin-top: 1.2rem;
+  padding: 14px;
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   color: white;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.05rem;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s;
+  transition: all 0.3s ease;
 }
 
 .registro-card button:hover {
-  background: #0b5ed7;
-  transform: scale(1.02);
+  background: linear-gradient(135deg, #0b5ed7, #094bac);
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(15px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .registro-header {
+    flex-direction: column;
+  }
 }
 </style>

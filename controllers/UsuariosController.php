@@ -1,17 +1,18 @@
 <?php
+session_start();
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/Usuario.php';
 
 class UsuariosController {
     private $model;
     private $db;
+
     public function __construct() {
         $this->db = (new Database())->getConnection();
         $this->model = new Usuario($this->db);
     }
 
     public function registrar($post) {
-        // basic validation
         $required = ['id_usuario','nombre_completo','correo','usuario','contrasena','tipo_usuario','telefono'];
         foreach ($required as $r) {
             if (empty($post[$r])) {
@@ -20,8 +21,7 @@ class UsuariosController {
         }
         try {
             $ok = $this->model->registrar($post);
-            if ($ok) return ['success'=>true];
-            return ['success'=>false,'message'=>'No se pudo insertar.'];
+            return $ok ? ['success'=>true] : ['success'=>false,'message'=>'No se pudo insertar.'];
         } catch (Exception $e) {
             return ['success'=>false,'message'=>$e->getMessage()];
         }
@@ -31,6 +31,7 @@ class UsuariosController {
         $user = $post['usuario'] ?? '';
         $pass = $post['contrasena'] ?? '';
         $data = $this->model->login($user, $pass);
+
         if ($data) {
             $_SESSION['usuario'] = $data;
             return ['success'=>true,'data'=>$data];
@@ -43,6 +44,7 @@ class UsuariosController {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
     $ctrl = new UsuariosController();
+
     if ($accion === 'registrar_usuario') {
         $res = $ctrl->registrar($_POST);
         if ($res['success']) {
@@ -54,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($accion === 'login_usuario') {
         $res = $ctrl->login($_POST);
         if ($res['success']) {
-            header('Location: ../index.php?page=home');
+            header('Location: ../index.php?page=home'); // dashboard
         } else {
             header('Location: ../index.php?page=login&error=1');
         }
