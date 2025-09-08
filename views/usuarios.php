@@ -26,25 +26,3 @@
       <button class="btn btn-success" type="submit">Registrar</button>
     </form>
   </div>
-  <div class="col-md-6">
-    <h3>Usuarios</h3>
-    <?php if (!empty($usuarios)): ?>
-      <table class="table table-striped">
-        <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Usuario</th><th>Teléfono</th></tr></thead>
-        <tbody>
-        <?php foreach ($usuarios as $u): ?>
-          <tr>
-            <td><?= htmlspecialchars($u['id_usuario']) ?></td>
-            <td><?= htmlspecialchars($u['nombre_completo']) ?></td>
-            <td><?= htmlspecialchars($u['correo']) ?></td>
-            <td><?= htmlspecialchars($u['usuario']) ?></td>
-            <td><?= htmlspecialchars($u['telefono']) ?></td>
-          </tr>
-        <?php endforeach; ?>
-        </tbody>
-      </table>
-    <?php else: ?>
-      <div class="alert alert-info">No hay usuarios registrados.</div>
-    <?php endif; ?>
-  </div>
-</div>
