@@ -1,52 +1,20 @@
 <?php
-// Este es un ejemplo de cómo podrías obtener tus datos de vacantes desde una base de datos.
-// Reemplaza esto con tu propia lógica de base de datos.
-$vacantes = [
-    [
-        'id_usuario' => '1001',
-        'titulo' => 'Desarrollador Web',
-        'empresa' => 'Tech Solutions Inc.',
-        'ubicacion' => 'Bogotá',
-        'salario' => '$2.500.000',
-        'categoria' => 'Tecnología',
-        'nombre_completo' => 'Carlos López'
-    ],
-    [
-        'id_usuario' => '1002',
-        'titulo' => 'Analista de Marketing Digital',
-        'empresa' => 'Creative Hub',
-        'ubicacion' => 'Medellín',
-        'salario' => '$1.800.000',
-        'categoria' => 'Marketing',
-        'nombre_completo' => 'Ana Torres'
-    ],
-    [
-        'id_usuario' => '1003',
-        'titulo' => 'Contador Junior',
-        'empresa' => 'Finance Partners',
-        'ubicacion' => 'Cali',
-        'salario' => '$1.200.000',
-        'categoria' => 'Finanzas',
-        'nombre_completo' => 'Juan Pérez'
-    ],
-    [
-        'id_usuario' => '1004',
-        'titulo' => 'Enfermero/a',
-        'empresa' => 'Hospital Central',
-        'ubicacion' => 'Barranquilla',
-        'salario' => '$2.000.000',
-        'categoria' => 'Salud',
-        'nombre_completo' => 'Marta García'
-    ],
-    [
-        'id_usuario' => '1005',
-        'titulo' => 'Maestro de Primaria',
-        'empresa' => 'Colegio Santa Clara',
-        'ubicacion' => 'Bogotá',
-        'salario' => '$1.700.000',
-        'categoria' => 'Educación',
-        'nombre_completo' => 'Ricardo Morales'
-    ],
+// 1. Incluye el controlador para poder acceder a sus métodos
+require_once 'controllers/VacantesController.php';
+
+// 2. Llama al método del controlador para obtener todas las vacantes
+$ctrl = new VacantesController();
+$vacantes = $ctrl->obtenerTodas();
+
+// Array con los iconos para cada categoría
+$iconos_vacante = [
+    'Tecnología' => 'https://cdn-icons-png.flaticon.com/512/1055/1055666.png',
+    'Marketing' => 'https://cdn-icons-png.flaticon.com/512/1150/1150614.png',
+    'Finanzas' => 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png',
+    'Salud' => 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
+    'Educación' => 'https://cdn-icons-png.flaticon.com/512/2984/2984194.png',
+    'Construcción' => 'https://cdn-icons-png.flaticon.com/512/2940/2940685.png',
+    'default' => 'https://cdn-icons-png.flaticon.com/512/1159/1159842.png'
 ];
 ?>
 
@@ -92,14 +60,14 @@ $vacantes = [
         }
 
         .list-title {
-            color: #000000ff;
+            color: #f5f5f5;
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
 
         /* ========================
-           ESTILOS DEL FORMULARIO DE VACANTES leonela
+           ESTILOS DEL FORMULARIO DE VACANTES
         ======================== */
         .form-card {
             background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
@@ -173,7 +141,7 @@ $vacantes = [
         }
 
         /* ========================
-           ESTILOS DE LAS TARJETAS DE VACANTES
+           ESTILOS DE LAS TARJETAS (SERVICIO)
         ======================== */
         .tarjetas-container {
             display: flex;
@@ -182,59 +150,59 @@ $vacantes = [
             justify-content: flex-start;
         }
 
-        .tarjeta-vacante {
+        .tarjeta {
             flex: 0 0 calc(20% - 8px);
             max-width: calc(20% - 8px);
-            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            background: linear-gradient(145deg, #e0e0e0, #ffffff);
             padding: 15px;
             border-radius: 12px;
-            border: 1px solid #2f2f2f;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .tarjeta-vacante:hover {
+        .tarjeta:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .tarjeta-vacante img {
+        .tarjeta img {
             width: 25px;
             height: 25px;
             margin-bottom: 8px;
-            filter: brightness(0.8) grayscale(100%);
+            filter: none;
             transition: filter 0.3s ease-in-out;
         }
 
-        .tarjeta-vacante:hover img {
-            filter: grayscale(0%) brightness(1);
+        .tarjeta:hover img {
+            filter: none;
         }
 
-        .tarjeta-vacante .card-title {
+        .tarjeta .card-title {
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 5px;
-            color: #ffffff;
+            color: #333;
         }
 
-        .tarjeta-vacante .sub-info {
-            font-size: 12px;
-            color: #bbb;
-            margin-bottom: 5px;
-        }
-
-        .tarjeta-vacante .salario {
+        .tarjeta .salario {
             font-size: 16px;
             font-weight: bold;
             color: #28a745;
             margin-bottom: 5px;
         }
 
-        .tarjeta-vacante .publicado {
+        .tarjeta .sub-info {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .tarjeta .publicado {
             font-size: 11px;
-            color: #888;
+            color: #777;
         }
 
         /* Animaciones */
@@ -273,28 +241,32 @@ $vacantes = [
 <div class="row vacante-wrapper">
     <div class="col-md-4 mb-4">
         <div class="form-card">
-            <h4 class="form-title">Publicar vacante</h4>
+            <h4 class="form-title"><span style="vertical-align:middle; margin-right:8px;">📝</span>Publicar vacante</h4>
             <form method="POST" action="controllers/VacantesController.php">
                 <input type="hidden" name="accion" value="registrar_vacante">
 
-                 <div class="mb-5">
-                    <label>ID Usuario</label>
-                    <input class="form-control" name="id_usuario" required>
+                <div class="mb-3">
+                    <label>ID Usuario <span title="Identificador del usuario que publica" style="color:#0d6efd;cursor:help;">&#9432;</span></label>
+                    <input class="form-control" name="id_usuario" required maxlength="20" placeholder="Ej: 12345678">
                 </div>
 
-
-                <div class="mb-4">
-                    <label>Título del Puesto</label>
-                    <input class="form-control" name="titulo" required>
+                <div class="mb-3">
+                    <label>Título del Puesto <span style="color:#0d6efd;">&#128188;</span></label>
+                    <input class="form-control" name="titulo" required maxlength="60" placeholder="Ej: Desarrollador Web">
                 </div>
 
-                <div class="mb-4">
-                    <label>Empresa</label>
-                    <input class="form-control" name="empresa" required>
+                <div class="mb-3">
+                    <label>Empresa <span style="color:#0d6efd;">&#127970;</span></label>
+                    <input class="form-control" name="empresa" required maxlength="60" placeholder="Ej: Tech Solutions Inc.">
                 </div>
 
-                <div class="mb-4">
-                    <label>Categoría</label>
+                <div class="mb-3">
+                    <label>Ubicación <span style="color:#0d6efd;">&#128205;</span></label>
+                    <input class="form-control" name="ubicacion" required maxlength="60" placeholder="Ej: Bogotá, Colombia">
+                </div>
+
+                <div class="mb-3">
+                    <label>Categoría <span style="color:#0d6efd;">&#128200;</span></label>
                     <select class="form-control" name="categoria" required>
                         <option value="">Seleccione una categoría...</option>
                         <option value="Tecnología">Tecnología</option>
@@ -310,60 +282,39 @@ $vacantes = [
                     </select>
                 </div>
 
-                <div class="mb-4">
-                    <label>Ubicación</label>
-                    <input class="form-control" name="ubicacion" placeholder="Ej: Bogotá, Colombia">
+                <div class="mb-3">
+                    <label>Salario <span style="color:#0d6efd;">&#128181;</span></label>
+                    <input class="form-control" name="salario" required maxlength="30" placeholder="Ej: $1.500.000 COP">
                 </div>
 
-                <div class="mb-4">
-                    <label>Salario</label>
-                    <input class="form-control" name="salario" type="text" placeholder="Ej: $1.500.000 COP">
-                </div>
-                
-                <div class="mb-4">
-                    <label>Descripción</label>
-                    <textarea class="form-control" name="descripcion" rows="3"></textarea>
+                <div class="mb-3">
+                    <label>Descripción <span style="color:#0d6efd;">&#128221;</span></label>
+                    <textarea class="form-control" name="descripcion" rows="3" required maxlength="300" placeholder="Describe la vacante..."></textarea>
                 </div>
 
-                <button class="btn-publicar" type="submit">+ Publicar</button>
+                <button type="submit" class="btn-publicar"><span style="vertical-align:middle; margin-right:6px;">&#128640;</span>Publicar Vacante</button>
             </form>
         </div>
-    </div>
-    
-    <div class="col-md-3">
-        <h4 class="list-title">Vacantes disponibles</h4>
-        <?php
-        $iconos_vacante = [
-            'Tecnología' => 'https://cdn-icons-png.flaticon.com/512/1055/1055666.png',
-            'Marketing' => 'https://cdn-icons-png.flaticon.com/512/1150/1150614.png',
-            'Finanzas' => 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png',
-            'Salud' => 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
-            'Educación' => 'https://cdn-icons-png.flaticon.com/512/2984/2984194.png',
-            'Construcción' => 'https://cdn-icons-png.flaticon.com/512/2940/2940685.png',
-            'default' => 'https://cdn-icons-png.flaticon.com/512/1159/1159842.png'
-        ];
+</div>
 
-        if (!empty($vacantes)): ?>
-            <div class="tarjetas-container">
-                <?php foreach ($vacantes as $v): ?>
-                    <?php
-                    $categoria_vacante = trim(htmlspecialchars($v['categoria']));
-                    $icono_url = $iconos_vacante[$categoria_vacante] ?? $iconos_vacante['default'];
-                    ?>
-                    <div class="tarjeta-vacante" onclick="alert('Vacante: <?= htmlspecialchars($v['titulo']) ?>\nEmpresa: <?= htmlspecialchars($v['empresa']) ?>\nSalario: <?= htmlspecialchars($v['salario']) ?>\nID Usuario: <?= htmlspecialchars($v['id_usuario'] ?? '') ?>')">
-                        <img src="<?= $icono_url ?>" alt="Ícono de vacante" />
-                        <h5 class="card-title"><?= htmlspecialchars($v['titulo']) ?></h5>
-                        <p class="sub-info"><?= htmlspecialchars($v['empresa']) ?> - <?= htmlspecialchars($v['ubicacion']) ?></p>
-                        <p class="salario"><strong><?= htmlspecialchars($v['salario']) ?></strong></p>
-                        <p class="publicado"><small>Publicada por: <?= htmlspecialchars($v['nombre_completo'] ?? 'Anónimo') ?></small></p>
-                        <p class="publicado"><small>ID Usuario: <?= htmlspecialchars($v['id_usuario'] ?? '') ?></small></p>
-                    </div>
-                <?php endforeach; ?>
+<div class="col-md-3">
+    <h3 class="list-title">Vacantes disponibles</h3>
+    <div class="tarjetas-container">
+        <?php foreach ($vacantes as $vac): 
+            $icono_url = $iconos_vacante[$vac['categoria']] ?? $iconos_vacante['default'];
+        ?>
+            <div class="tarjeta">
+                <img src="<?= $icono_url ?>" alt="<?= htmlspecialchars($vac['categoria']) ?>">
+                <div class="card-title"><?= htmlspecialchars($vac['titulo']) ?></div>
+                <div class="sub-info">ID: <strong style="color:#0d6efd;"><?= htmlspecialchars($vac['id_vacante'] ?? $vac['id'] ?? '') ?></strong></div>
+                <div class="sub-info"><?= htmlspecialchars($vac['empresa']) ?> - <?= htmlspecialchars($vac['ubicacion']) ?></div>
+                <div class="salario"><?= htmlspecialchars($vac['salario']) ?></div>
+                <div class="sub-info"><?= htmlspecialchars($vac['nombre_completo'] ?? 'Usuario') ?></div>
+                <div class="publicado"><?= date('d/m/Y', strtotime($vac['fecha_creacion'] ?? date('Y-m-d'))) ?></div>
             </div>
-        <?php else: ?>
-            <div class="alert alert-dark">No hay vacantes publicadas aún.</div>
-        <?php endif; ?>
+        <?php endforeach; ?>
     </div>
+</div>
 </div>
 
 </body>

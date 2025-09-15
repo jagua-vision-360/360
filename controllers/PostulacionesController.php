@@ -8,13 +8,19 @@ class PostulacionesController {
     }
 
     public function crear($post) {
-        if (empty($post['id_usuario']) || empty($post['id_vacante']) || empty($post['fecha'])) {
+        if (empty($post['id_usuario']) || empty($post['id_vacante']) || empty($post['fecha_postulacion'])) {
             return ['success'=>false,'message'=>'Faltan campos.'];
         }
+        $estado = 'pendiente';
         try {
-            $sql = "INSERT INTO postulaciones (id_usuario, id_vacante, fecha) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO postulaciones (id_usuario, id_vacante, fecha_postulacion, estado) VALUES (?, ?, ?, ?)";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([$post['id_usuario'], $post['id_vacante'], $post['fecha']]);
+            $stmt->execute([
+                $post['id_usuario'],
+                $post['id_vacante'],
+                $post['fecha_postulacion'],
+                $estado
+            ]);
             return ['success'=>true];
         } catch (Exception $e) {
             return ['success'=>false,'message'=>$e->getMessage()];

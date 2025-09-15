@@ -1,3 +1,5 @@
+</style>
+
 <div class="registro-wrapper">
   <div class="registro-card">
     <div class="registro-header">
@@ -201,4 +203,3 @@ body {
     flex-direction: column;
   }
 }
-</style>

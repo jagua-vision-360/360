@@ -4,7 +4,12 @@ require_once __DIR__ . '/../config/database.php';
 
 // Traer todas las postulaciones
 $stmt = (new Database())->getConnection()->query("SELECT * FROM postulaciones ORDER BY id_postulacion DESC");
-$postulaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$postulaciones = [];
+if ($stmt) {
+  while ($row = $stmt->fetch_assoc()) {
+    $postulaciones[] = $row;
+  }
+}
 ?>
 
 <div class="row servicio-wrapper">
@@ -21,19 +26,35 @@ $postulaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <input type="hidden" name="accion" value="registrar_postulacion">
 
         <div class="mb-5">
-          <label>ID Aspirante</label>
+          <label>ID Usuario</label>
           <input class="form-control" name="id_usuario" required>
         </div>
 
+
+        <?php
+        // Obtener vacantes para el select
+        require_once __DIR__ . '/../models/Vacante.php';
+        $vacanteModel = new Vacante((new Database())->getConnection());
+        $vacantesDisponibles = $vacanteModel->obtenerTodos();
+        ?>
         <div class="mb-5">
           <label>ID Vacante</label>
-          <input class="form-control" name="id_vacante" type="number" required>
+          <select class="form-control" name="id_vacante" required>
+            <option value="">Seleccione una vacante...</option>
+            <?php foreach ($vacantesDisponibles as $v): ?>
+              <option value="<?= htmlspecialchars($v['id_vacante']) ?>">
+                <?= htmlspecialchars($v['id_vacante']) ?> - <?= htmlspecialchars($v['titulo']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
         </div>
 
+
         <div class="mb-5">
-          <label>Fecha</label>
-          <input class="form-control" name="fecha" type="date" required>
+          <label>Fecha de postulación</label>
+          <input class="form-control" name="fecha_postulacion" type="date" required>
         </div>
+
 
         <button class="btn-publicar" type="submit">Postular</button>
       </form>
@@ -52,16 +73,29 @@ $postulaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <th>ID Postulación</th>
               <th>ID Usuario</th>
               <th>ID Vacante</th>
-              <th>Fecha</th>
+              <th>Fecha de postulación</th>
+              <th>Estado</th>
             </tr>
           </thead>
           <tbody>
             <?php foreach ($postulaciones as $p): ?>
               <tr>
-                <td><?= htmlspecialchars($p['id_postulacion']) ?></td>
-                <td><?= htmlspecialchars($p['id_usuario']) ?></td>
-                <td><?= htmlspecialchars($p['id_vacante']) ?></td>
-                <td><?= htmlspecialchars($p['fecha']) ?></td>
+                <td><?= htmlspecialchars($p['id_postulacion'] ?? '') ?></td>
+                <td><?= htmlspecialchars($p['id_usuario'] ?? '') ?></td>
+                <td><?= htmlspecialchars($p['id_vacante'] ?? '') ?></td>
+                <td><?= htmlspecialchars($p['fecha_postulacion'] ?? '') ?></td>
+                <td>
+                  <?php
+                    $estado = strtolower($p['estado'] ?? '');
+                    $color = '#888';
+                    if ($estado === 'pendiente') $color = '#d9534f'; // rojo
+                    elseif ($estado === 'aceptado') $color = '#28a745'; // verde
+                    elseif ($estado === 'rechazado') $color = '#6c757d'; // gris
+                  ?>
+                  <span style="font-weight:bold;color:<?= $color ?>;text-transform:capitalize;">
+                    <?= htmlspecialchars($p['estado'] ?? '') ?>
+                  </span>
+                </td>
               </tr>
             <?php endforeach; ?>
           </tbody>
