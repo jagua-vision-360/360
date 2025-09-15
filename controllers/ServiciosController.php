@@ -3,6 +3,23 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/Servicio.php';
 
 class ServiciosController {
+    public function editar($post) {
+        try {
+            $ok = $this->model->editar($post);
+            return ['success' => $ok];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function eliminar($id_servicio, $id_usuario) {
+        try {
+            $ok = $this->model->eliminar($id_servicio, $id_usuario);
+            return ['success' => $ok];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
     private $model;
     private $db;
 
@@ -24,6 +41,27 @@ class ServiciosController {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($accion === 'editar_servicio') {
+        $res = $ctrl->editar($_POST);
+        if ($res['success']) {
+            header('Location: ../index.php?page=servicios&msg=editado');
+        } else {
+            header('Location: ../index.php?page=servicios&error=' . urlencode($res['message']));
+        }
+        exit;
+    }
+    if ($accion === 'eliminar_servicio') {
+        session_start();
+        $id_usuario = $_SESSION['usuario']['id_usuario'] ?? null;
+        $id_servicio = $_POST['id_servicio'] ?? null;
+        $res = $ctrl->eliminar($id_servicio, $id_usuario);
+        if ($res['success']) {
+            header('Location: ../index.php?page=servicios&msg=eliminado');
+        } else {
+            header('Location: ../index.php?page=servicios&error=' . urlencode($res['message']));
+        }
+        exit;
+    }
     $accion = $_POST['accion'] ?? '';
     $ctrl = new ServiciosController();
 

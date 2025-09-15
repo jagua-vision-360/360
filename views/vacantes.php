@@ -300,8 +300,12 @@ $iconos_vacante = [
 <div class="col-md-3">
     <h3 class="list-title">Vacantes disponibles</h3>
     <div class="tarjetas-container">
-        <?php foreach ($vacantes as $vac): 
+        <?php
+        $usuario_actual = $_SESSION['usuario']['id_usuario'] ?? null;
+        foreach ($vacantes as $vac):
             $icono_url = $iconos_vacante[$vac['categoria']] ?? $iconos_vacante['default'];
+            // Mostrar solo vacantes del usuario logueado
+            if ($usuario_actual && $vac['id_usuario'] !== $usuario_actual) continue;
         ?>
             <div class="tarjeta">
                 <img src="<?= $icono_url ?>" alt="<?= htmlspecialchars($vac['categoria']) ?>">
@@ -311,6 +315,16 @@ $iconos_vacante = [
                 <div class="salario"><?= htmlspecialchars($vac['salario']) ?></div>
                 <div class="sub-info"><?= htmlspecialchars($vac['nombre_completo'] ?? 'Usuario') ?></div>
                 <div class="publicado"><?= date('d/m/Y', strtotime($vac['fecha_creacion'] ?? date('Y-m-d'))) ?></div>
+                <form method="POST" action="controllers/VacantesController.php" style="display:inline-block;margin-top:8px;">
+                  <input type="hidden" name="accion" value="editar_vacante">
+                  <input type="hidden" name="id_vacante" value="<?= htmlspecialchars($vac['id_vacante']) ?>">
+                  <button type="submit" class="btn-publicar" style="background:#ffc107;color:#222;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;">Editar</button>
+                </form>
+                <form method="POST" action="controllers/VacantesController.php" style="display:inline-block;">
+                  <input type="hidden" name="accion" value="eliminar_vacante">
+                  <input type="hidden" name="id_vacante" value="<?= htmlspecialchars($vac['id_vacante']) ?>">
+                  <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;">Eliminar</button>
+                </form>
             </div>
         <?php endforeach; ?>
     </div>

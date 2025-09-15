@@ -25,9 +25,7 @@ class Vacante {
 
     public function obtenerTodos() {
         $sql = "SELECT v.*, u.nombre_completo FROM vacantes v LEFT JOIN usuarios u ON v.id_usuario = u.id_usuario ORDER BY v.id_vacante DESC";
-        
         $result = $this->conn->query($sql);
-        
         if ($result) {
             $vacantes = $result->fetch_all(MYSQLI_ASSOC);
             $result->free();
@@ -35,5 +33,39 @@ class Vacante {
         } else {
             return [];
         }
+    }
+
+    public function editar($data) {
+        $sql = "UPDATE vacantes SET titulo=?, descripcion=?, salario=?, empresa=?, ubicacion=?, categoria=? WHERE id_vacante=? AND id_usuario=?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception("Error al preparar la consulta: " . $this->conn->error);
+        }
+        $stmt->bind_param(
+            "ssssssii",
+            $data['titulo'],
+            $data['descripcion'],
+            $data['salario'],
+            $data['empresa'],
+            $data['ubicacion'],
+            $data['categoria'],
+            $data['id_vacante'],
+            $data['id_usuario']
+        );
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
+
+    public function eliminar($id_vacante, $id_usuario) {
+        $sql = "DELETE FROM vacantes WHERE id_vacante=? AND id_usuario=?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception("Error al preparar la consulta: " . $this->conn->error);
+        }
+        $stmt->bind_param("ii", $id_vacante, $id_usuario);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
     }
 }

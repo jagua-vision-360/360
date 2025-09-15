@@ -9,6 +9,10 @@
 
     <form method="POST" action="controllers/UsuariosController.php">
       <input type="hidden" name="accion" value="registrar_usuario">
+      <div class="form-group">
+        <label>Foto de perfil</label>
+        <input type="file" name="foto_perfil" accept="image/*">
+      </div>
 
       <div class="form-row">
         <div class="form-group">
@@ -110,8 +114,8 @@ body {
   font-weight: 700;
   border-left: 4px solid #0d6efd;
   padding-left: 1rem;
-  background: linear-gradient(90deg, #e0e0e0 80%, #f7f7f7 100%);
-  border-radius: 8px;
+  background: none;
+  border-radius: 0;
   margin-bottom: 0.5rem;
 }
 .registro-card form {
