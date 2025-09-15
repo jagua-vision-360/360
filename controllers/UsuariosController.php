@@ -13,15 +13,25 @@ class UsuariosController {
     }
 
     public function registrar($post) {
-        $required = ['id_usuario','nombre_completo','correo','usuario','contrasena','tipo_usuario','telefono'];
+        // Validar campos obligatorios
+        $required = [
+            'id_usuario','nombre_completo','correo',
+            'usuario','contrasena','tipo_usuario','telefono'
+        ];
         foreach ($required as $r) {
             if (empty($post[$r])) {
-                return ['success'=>false,'message'=>"Falta campo $r"];
+                return [
+                    'success'=>false,
+                    'message'=>"Falta campo $r"
+                ];
             }
         }
+
         try {
             $ok = $this->model->registrar($post);
-            return $ok ? ['success'=>true] : ['success'=>false,'message'=>'No se pudo insertar.'];
+            return $ok
+                ? ['success'=>true]
+                : ['success'=>false,'message'=>'No se pudo insertar el usuario.'];
         } catch (Exception $e) {
             return ['success'=>false,'message'=>$e->getMessage()];
         }
@@ -30,17 +40,18 @@ class UsuariosController {
     public function login($post) {
         $user = $post['usuario'] ?? '';
         $pass = $post['contrasena'] ?? '';
+
         $data = $this->model->login($user, $pass);
 
         if ($data) {
             $_SESSION['usuario'] = $data;
             return ['success'=>true,'data'=>$data];
         }
-        return ['success'=>false];
+        return ['success'=>false,'message'=>'Credenciales incorrectas'];
     }
 }
 
-// Direct POST handling
+// --- Manejo directo del POST ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
     $ctrl = new UsuariosController();
@@ -53,12 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ../index.php?page=usuarios&error=' . urlencode($res['message']));
         }
         exit;
-    } elseif ($accion === 'login_usuario') {
+    }
+
+    if ($accion === 'login_usuario') {
         $res = $ctrl->login($_POST);
         if ($res['success']) {
-            header('Location: ../index.php?page=home'); // dashboard
+            header('Location: ../index.php?page=home'); // Panel principal
         } else {
-            header('Location: ../index.php?page=login&error=1');
+            header('Location: ../index.php?page=login&error=' . urlencode($res['message']));
         }
         exit;
     }
