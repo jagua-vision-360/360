@@ -3,6 +3,7 @@
 // Reemplaza esto con tu propia lógica de base de datos.
 $vacantes = [
     [
+        'id_usuario' => '1001',
         'titulo' => 'Desarrollador Web',
         'empresa' => 'Tech Solutions Inc.',
         'ubicacion' => 'Bogotá',
@@ -11,6 +12,7 @@ $vacantes = [
         'nombre_completo' => 'Carlos López'
     ],
     [
+        'id_usuario' => '1002',
         'titulo' => 'Analista de Marketing Digital',
         'empresa' => 'Creative Hub',
         'ubicacion' => 'Medellín',
@@ -19,6 +21,7 @@ $vacantes = [
         'nombre_completo' => 'Ana Torres'
     ],
     [
+        'id_usuario' => '1003',
         'titulo' => 'Contador Junior',
         'empresa' => 'Finance Partners',
         'ubicacion' => 'Cali',
@@ -27,6 +30,7 @@ $vacantes = [
         'nombre_completo' => 'Juan Pérez'
     ],
     [
+        'id_usuario' => '1004',
         'titulo' => 'Enfermero/a',
         'empresa' => 'Hospital Central',
         'ubicacion' => 'Barranquilla',
@@ -35,6 +39,7 @@ $vacantes = [
         'nombre_completo' => 'Marta García'
     ],
     [
+        'id_usuario' => '1005',
         'titulo' => 'Maestro de Primaria',
         'empresa' => 'Colegio Santa Clara',
         'ubicacion' => 'Bogotá',
@@ -272,6 +277,12 @@ $vacantes = [
             <form method="POST" action="controllers/VacantesController.php">
                 <input type="hidden" name="accion" value="registrar_vacante">
 
+                 <div class="mb-5">
+                    <label>ID Usuario</label>
+                    <input class="form-control" name="id_usuario" required>
+                </div>
+
+
                 <div class="mb-4">
                     <label>Título del Puesto</label>
                     <input class="form-control" name="titulo" required>
@@ -339,12 +350,13 @@ $vacantes = [
                     $categoria_vacante = trim(htmlspecialchars($v['categoria']));
                     $icono_url = $iconos_vacante[$categoria_vacante] ?? $iconos_vacante['default'];
                     ?>
-                    <div class="tarjeta-vacante" onclick="alert('Vacante: <?= htmlspecialchars($v['titulo']) ?>\nEmpresa: <?= htmlspecialchars($v['empresa']) ?>\nSalario: <?= htmlspecialchars($v['salario']) ?>')">
+                    <div class="tarjeta-vacante" onclick="alert('Vacante: <?= htmlspecialchars($v['titulo']) ?>\nEmpresa: <?= htmlspecialchars($v['empresa']) ?>\nSalario: <?= htmlspecialchars($v['salario']) ?>\nID Usuario: <?= htmlspecialchars($v['id_usuario'] ?? '') ?>')">
                         <img src="<?= $icono_url ?>" alt="Ícono de vacante" />
                         <h5 class="card-title"><?= htmlspecialchars($v['titulo']) ?></h5>
                         <p class="sub-info"><?= htmlspecialchars($v['empresa']) ?> - <?= htmlspecialchars($v['ubicacion']) ?></p>
                         <p class="salario"><strong><?= htmlspecialchars($v['salario']) ?></strong></p>
                         <p class="publicado"><small>Publicada por: <?= htmlspecialchars($v['nombre_completo'] ?? 'Anónimo') ?></small></p>
+                        <p class="publicado"><small>ID Usuario: <?= htmlspecialchars($v['id_usuario'] ?? '') ?></small></p>
                     </div>
                 <?php endforeach; ?>
             </div>
