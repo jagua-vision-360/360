@@ -59,12 +59,14 @@ $iconos_vacante = [
             max-width: 66%;
         }
 
-        .list-title {
-            color: #f5f5f5;
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
+        /* ...existing code... */
+.list-title {
+    color: #111 !important;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
 
         /* ========================
            ESTILOS DEL FORMULARIO DE VACANTES
