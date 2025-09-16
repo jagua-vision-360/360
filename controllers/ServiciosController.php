@@ -41,6 +41,8 @@ class ServiciosController {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $accion = $_POST['accion'] ?? '';
+    $ctrl = new ServiciosController();
     if ($accion === 'editar_servicio') {
         $res = $ctrl->editar($_POST);
         if ($res['success']) {
@@ -62,8 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     }
-    $accion = $_POST['accion'] ?? '';
-    $ctrl = new ServiciosController();
 
     if ($accion === 'registrar_servicio') {
         // --- INICIO DE LOS CAMBIOS ---

@@ -59,13 +59,12 @@ $iconos_vacante = [
             max-width: 66%;
         }
 
-        /* ...existing code... */
-.list-title {
-    color: #111 !important;
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-}
+        .list-title {
+            color: #111 !important;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
 
 
         /* ========================
@@ -317,6 +316,7 @@ $iconos_vacante = [
                 <div class="salario"><?= htmlspecialchars($vac['salario']) ?></div>
                 <div class="sub-info"><?= htmlspecialchars($vac['nombre_completo'] ?? 'Usuario') ?></div>
                 <div class="publicado"><?= date('d/m/Y', strtotime($vac['fecha_creacion'] ?? date('Y-m-d'))) ?></div>
+                <!-- Botones de Editar y Eliminar -->
                 <form method="POST" action="controllers/VacantesController.php" style="display:inline-block;margin-top:8px;">
                   <input type="hidden" name="accion" value="editar_vacante">
                   <input type="hidden" name="id_vacante" value="<?= htmlspecialchars($vac['id_vacante']) ?>">

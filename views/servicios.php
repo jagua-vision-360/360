@@ -317,6 +317,7 @@ body {
                 <?php
                 $usuario_actual = $_SESSION['usuario']['id_usuario'] ?? null;
                 foreach ($servicios as $s):
+                    // Mostrar solo los servicios del usuario actual
                     if ($usuario_actual && $s['id_usuario'] !== $usuario_actual) continue;
                     $nombre_servicio_limpio = trim(htmlspecialchars($s['nombre_servicio']));
                     $icono_url = $iconos_servicio[$nombre_servicio_limpio] ?? $iconos_servicio['default'];
@@ -326,15 +327,16 @@ body {
                         <h5 class="card-title"><?= htmlspecialchars($s['nombre_servicio']) ?></h5>
                         <p class="precio"><strong>$<?= number_format($s['precio'] ?? 0, 0, ',', '.') ?></strong></p>
                         <p class="publicado"><small>Por: <?= htmlspecialchars($s['nombre_completo'] ?? $s['id_usuario']) ?></small></p>
-                        <form method="POST" action="controllers/ServiciosController.php" style="display:inline-block;margin-top:8px;">
-                          <input type="hidden" name="accion" value="editar_servicio">
-                          <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
-                          <button type="submit" class="btn-publicar" style="background:#ffc107;color:#222;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;">Editar</button>
+                        <!-- Botones de Editar y Eliminar (funcionalidad requiere modificaciones en el controlador) -->
+                        <form method="POST" action="controllers/ServiciosController.php" style="display:inline-block;">
+                            <input type="hidden" name="accion" value="editar_servicio">
+                            <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
+                            <button type="submit" class="btn-publicar" style="background:#ffc107;color:#222;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;">Editar</button>
                         </form>
                         <form method="POST" action="controllers/ServiciosController.php" style="display:inline-block;">
-                          <input type="hidden" name="accion" value="eliminar_servicio">
-                          <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
-                          <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;">Eliminar</button>
+                            <input type="hidden" name="accion" value="eliminar_servicio">
+                            <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
+                            <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;">Eliminar</button>
                         </form>
                     </div>
                 <?php endforeach; ?>
