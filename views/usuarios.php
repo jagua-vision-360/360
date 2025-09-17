@@ -1,17 +1,19 @@
-</style>
 
 <div class="registro-wrapper">
   <div class="registro-card">
     <div class="registro-header">
-      <!-- Aquí va tu logo -->
-          <h2>Registro de Usuario</h2>
+      <h2>Registro de Usuario</h2>
     </div>
 
-    <form method="POST" action="controllers/UsuariosController.php">
+    <form method="POST" 
+          action="controllers/UsuariosController.php"
+          enctype="multipart/form-data">
+          
       <input type="hidden" name="accion" value="registrar_usuario">
+
       <div class="form-group">
         <label>Foto de perfil</label>
-        <input type="file" name="foto_perfil" accept="image/*">
+        <input type="file" name="foto" accept="image/*">
       </div>
 
       <div class="form-row">
@@ -61,16 +63,6 @@
           <label>Teléfono</label>
           <input type="text" name="telefono" required>
         </div>
-
-        <div class="form-group">
-          <label>Razón social</label>
-          <input type="text" name="razon_social">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Dirección</label>
-        <input type="text" name="direccion">
       </div>
 
       <button type="submit">Registrar</button>

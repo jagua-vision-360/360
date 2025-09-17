@@ -12,7 +12,7 @@ class UsuariosController {
         $this->model = new Usuario($this->db);
     }
 
-    public function registrar($post) {
+    public function registrar($post, $files) {
         // Validar campos obligatorios
         $required = [
             'id_usuario','nombre_completo','correo',
@@ -26,6 +26,19 @@ class UsuariosController {
                 ];
             }
         }
+
+        // Procesar foto de perfil si se envía
+        $fotoPerfil = null;
+        if (isset($files['foto_perfil']) && $files['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+            $nombreArchivo = time() . '_' . basename($files['foto_perfil']['name']);
+            $rutaDestino = __DIR__ . '/../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($files['foto_perfil']['tmp_name'], $rutaDestino)) {
+                $fotoPerfil = $nombreArchivo;
+            }
+        }
+
+        // Agregar el nombre de la foto al array de datos
+        $post['foto_perfil'] = $fotoPerfil;
 
         try {
             $ok = $this->model->registrar($post);
@@ -49,6 +62,34 @@ class UsuariosController {
         }
         return ['success'=>false,'message'=>'Credenciales incorrectas'];
     }
+
+    public function actualizarPerfil($post, $files) {
+        $id = $_SESSION['usuario']['id_usuario'];
+        $nombre = $post['nombre_completo'] ?? '';
+        $correo = $post['correo'] ?? '';
+        $telefono = $post['telefono'] ?? '';
+        $fotoPerfil = $_SESSION['usuario']['foto_perfil'] ?? null;
+
+        if (isset($files['foto_perfil']) && $files['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+            $nombreArchivo = time() . '_' . basename($files['foto_perfil']['name']);
+            $rutaDestino = __DIR__ . '/../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($files['foto_perfil']['tmp_name'], $rutaDestino)) {
+                $fotoPerfil = $nombreArchivo;
+            }
+        }
+
+        $ok = $this->model->actualizar($id, $nombre, $correo, $telefono, $fotoPerfil);
+
+        if ($ok) {
+            $_SESSION['usuario']['nombre_completo'] = $nombre;
+            $_SESSION['usuario']['correo'] = $correo;
+            $_SESSION['usuario']['telefono'] = $telefono;
+            $_SESSION['usuario']['foto_perfil'] = $fotoPerfil;
+
+            return ['success'=>true];
+        }
+        return ['success'=>false,'message'=>'No se pudo actualizar el perfil.'];
+    }
 }
 
 // --- Manejo directo del POST ---
@@ -57,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ctrl = new UsuariosController();
 
     if ($accion === 'registrar_usuario') {
-        $res = $ctrl->registrar($_POST);
+        $res = $ctrl->registrar($_POST, $_FILES);
         if ($res['success']) {
             header('Location: ../index.php?page=usuarios&msg=registrado');
         } else {
@@ -69,9 +110,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($accion === 'login_usuario') {
         $res = $ctrl->login($_POST);
         if ($res['success']) {
-            header('Location: ../index.php?page=home'); // Panel principal
+            header('Location: ../index.php?page=panel');
         } else {
             header('Location: ../index.php?page=login&error=' . urlencode($res['message']));
+        }
+        exit;
+    }
+
+    if ($accion === 'actualizar_perfil') {
+        $res = $ctrl->actualizarPerfil($_POST, $_FILES);
+        if ($res['success']) {
+            header('Location: ../views/perfil.php?msg=actualizado');
+        } else {
+            header('Location: ../views/perfil.php?error=' . urlencode($res['message']));
         }
         exit;
     }
