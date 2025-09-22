@@ -41,6 +41,20 @@ class VacantesController {
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
+
+    public function obtenerVacanteParaEdicion($id_vacante) {
+        require_once __DIR__ . '/../config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+
+        $stmt = $db->prepare("SELECT * FROM vacantes WHERE id_vacante = ?");
+        $stmt->bind_param("i", $id_vacante);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $vacante = $result->fetch_assoc();
+        $stmt->close();
+        return $vacante;
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

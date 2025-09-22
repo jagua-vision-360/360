@@ -312,32 +312,84 @@ body {
             'default' => 'https://cdn-icons-png.flaticon.com/512/1077/1077035.png'
         ];
         
+        // Antes de usar $_SESSION['usuario'], verifica que la sesión esté activa y el usuario esté logueado
+        $usuario_actual = isset($_SESSION['usuario']['id_usuario']) ? $_SESSION['usuario']['id_usuario'] : null;
+        
         if (!empty($servicios)): ?>
             <div class="tarjetas-container">
                 <?php
-                $usuario_actual = $_SESSION['usuario']['id_usuario'] ?? null;
+                $editando = ($_POST['accion'] ?? '') === 'editar_servicio' ? ($_POST['id_servicio'] ?? null) : null;
                 foreach ($servicios as $s):
-                    // Mostrar solo los servicios del usuario actual
                     if ($usuario_actual && $s['id_usuario'] !== $usuario_actual) continue;
                     $nombre_servicio_limpio = trim(htmlspecialchars($s['nombre_servicio']));
                     $icono_url = $iconos_servicio[$nombre_servicio_limpio] ?? $iconos_servicio['default'];
+                    // Prepara los datos para el modal
+                    $info = htmlspecialchars(json_encode($s), ENT_QUOTES, 'UTF-8');
                 ?>
-                    <div class="tarjeta">
+                    <div class="tarjeta" onclick="mostrarServicio(<?= $info ?>)">
                         <img src="<?= $icono_url ?>" alt="Ícono de servicio" />
                         <h5 class="card-title"><?= htmlspecialchars($s['nombre_servicio']) ?></h5>
                         <p class="precio"><strong>$<?= number_format($s['precio'] ?? 0, 0, ',', '.') ?></strong></p>
                         <p class="publicado"><small>Por: <?= htmlspecialchars($s['nombre_completo'] ?? $s['id_usuario']) ?></small></p>
-                        <!-- Botones de Editar y Eliminar (funcionalidad requiere modificaciones en el controlador) -->
-                        <form method="POST" action="controllers/ServiciosController.php" style="display:inline-block;">
-                            <input type="hidden" name="accion" value="editar_servicio">
-                            <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
-                            <button type="submit" class="btn-publicar" style="background:#ffc107;color:#222;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;">Editar</button>
-                        </form>
-                        <form method="POST" action="controllers/ServiciosController.php" style="display:inline-block;">
-                            <input type="hidden" name="accion" value="eliminar_servicio">
-                            <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
-                            <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;">Eliminar</button>
-                        </form>
+                        <!-- Contacto WhatsApp -->
+                        <?php if (!empty($s['whatsapp'])): ?>
+                            <p style="margin:8px 0;">
+                                <a href="https://wa.me/<?= preg_replace('/\D/', '', $s['whatsapp']) ?>?text=Hola, estoy interesado en tu servicio de <?= urlencode($s['nombre_servicio']) ?>." target="_blank" style="display:inline-block;background:#25D366;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">
+                                    Contactar por WhatsApp
+                                </a>
+                                <br>
+                                <span style="font-size:12px;color:#222;">WhatsApp: <?= htmlspecialchars($s['whatsapp']) ?></span>
+                            </p>
+                        <?php else: ?>
+                            <p style="font-size:12px;color:#888;">WhatsApp: No disponible</p>
+                        <?php endif; ?>
+                        <!-- Teléfono del usuario -->
+                        <?php if (!empty($s['telefono'])): ?>
+                            <p style="font-size:13px;color:#222;margin:4px 0;">
+                                <strong>Teléfono:</strong> <?= htmlspecialchars($s['telefono']) ?>
+                            </p>
+                        <?php else: ?>
+                            <p style="font-size:12px;color:#888;">Teléfono: No disponible</p>
+                        <?php endif; ?>
+                        <?php if ($usuario_actual == $s['id_usuario']): ?>
+                            <?php if ($editando == $s['id_servicio']): ?>
+                                <!-- Formulario de edición -->
+                                <form method="POST" action="controllers/ServiciosController.php">
+                                    <input type="hidden" name="accion" value="actualizar_servicio">
+                                    <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
+                                    <div class="mb-2">
+                                        <label>Categoría</label>
+                                        <select class="form-control" name="nombre_servicio" required>
+                                            <?php foreach ($iconos_servicio as $cat => $url): if ($cat == 'default') continue; ?>
+                                                <option value="<?= $cat ?>" <?= $cat == $s['nombre_servicio'] ? 'selected' : '' ?>><?= $cat ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>Descripción</label>
+                                        <textarea class="form-control" name="descripcion" rows="2"><?= htmlspecialchars($s['descripcion']) ?></textarea>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>Precio</label>
+                                        <input class="form-control" name="precio" type="number" step="0.01" value="<?= htmlspecialchars($s['precio']) ?>">
+                                    </div>
+                                    <button type="submit" class="btn-publicar" style="background:#198754;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;">Guardar</button>
+                                    <a href="" class="btn-publicar" style="background:#6c757d;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;text-decoration:none;" onclick="window.location.reload();return false;">Cancelar</a>
+                                </form>
+                            <?php else: ?>
+                                <!-- Botones de Editar y Eliminar SOLO para el creador -->
+                                <form method="POST" action="" style="display:inline-block;">
+                                    <input type="hidden" name="accion" value="editar_servicio">
+                                    <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
+                                    <button type="submit" class="btn-publicar" style="background:#ffc107;color:#222;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;">Editar</button>
+                                </form>
+                                <form method="POST" action="controllers/ServiciosController.php" style="display:inline-block;">
+                                    <input type="hidden" name="accion" value="eliminar_servicio">
+                                    <input type="hidden" name="id_servicio" value="<?= htmlspecialchars($s['id_servicio']) ?>">
+                                    <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;">Eliminar</button>
+                                </form>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -346,3 +398,33 @@ body {
         <?php endif; ?>
     </div>
 </div>
+<!-- Modal para mostrar información completa del servicio -->
+<div id="modalServicio" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#6f42c1;color:#fff;padding:2rem;border-radius:16px;max-width:400px;width:90%;position:relative;">
+        <button onclick="cerrarModalServicio()" style="position:absolute;top:10px;right:10px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;">&times;</button>
+        <div id="contenidoServicio"></div>
+    </div>
+</div>
+<script>
+function mostrarServicio(data) {
+    var html = `
+        <h2 style="margin-top:0;">${data.nombre_servicio}</h2>
+        <p><strong>Descripción:</strong> ${data.descripcion ?? ''}</p>
+        <p><strong>Precio:</strong> $${data.precio ? Number(data.precio).toLocaleString() : ''}</p>
+        <p><strong>Prestador:</strong> ${data.nombre_completo ?? data.id_usuario}</p>
+        <p><strong>WhatsApp:</strong> ${data.whatsapp ?? 'No disponible'}</p>
+        <p><strong>Teléfono:</strong> ${data.telefono ?? 'No disponible'}</p>
+        <p><strong>ID Servicio:</strong> ${data.id_servicio ?? ''}</p>
+        <p>
+            ${data.whatsapp ? `<a href="https://wa.me/${data.whatsapp.replace(/\D/g,'')}?text=Hola, estoy interesado en tu servicio de ${encodeURIComponent(data.nombre_servicio)}." target="_blank" style="display:inline-block;background:#25D366;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">Contactar por WhatsApp</a>` : ''}
+        </p>
+    `;
+    document.getElementById('contenidoServicio').innerHTML = html;
+    document.getElementById('modalServicio').style.display = 'flex';
+}
+function cerrarModalServicio() {
+    document.getElementById('modalServicio').style.display = 'none';
+}
+</script>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>

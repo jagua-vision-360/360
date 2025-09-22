@@ -305,10 +305,9 @@ $iconos_vacante = [
         $usuario_actual = $_SESSION['usuario']['id_usuario'] ?? null;
         foreach ($vacantes as $vac):
             $icono_url = $iconos_vacante[$vac['categoria']] ?? $iconos_vacante['default'];
-            // Mostrar solo vacantes del usuario logueado
             if ($usuario_actual && $vac['id_usuario'] !== $usuario_actual) continue;
         ?>
-            <div class="tarjeta">
+            <div class="tarjeta" onclick="mostrarVacante(<?= htmlspecialchars(json_encode($vac), ENT_QUOTES, 'UTF-8') ?>)">
                 <img src="<?= $icono_url ?>" alt="<?= htmlspecialchars($vac['categoria']) ?>">
                 <div class="card-title"><?= htmlspecialchars($vac['titulo']) ?></div>
                 <div class="sub-info">ID: <strong style="color:#0d6efd;"><?= htmlspecialchars($vac['id_vacante'] ?? $vac['id'] ?? '') ?></strong></div>
@@ -316,22 +315,49 @@ $iconos_vacante = [
                 <div class="salario"><?= htmlspecialchars($vac['salario']) ?></div>
                 <div class="sub-info"><?= htmlspecialchars($vac['nombre_completo'] ?? 'Usuario') ?></div>
                 <div class="publicado"><?= date('d/m/Y', strtotime($vac['fecha_creacion'] ?? date('Y-m-d'))) ?></div>
-                <!-- Botones de Editar y Eliminar -->
-                <form method="POST" action="controllers/VacantesController.php" style="display:inline-block;margin-top:8px;">
-                  <input type="hidden" name="accion" value="editar_vacante">
-                  <input type="hidden" name="id_vacante" value="<?= htmlspecialchars($vac['id_vacante']) ?>">
-                  <button type="submit" class="btn-publicar" style="background:#ffc107;color:#222;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;">Editar</button>
-                </form>
-                <form method="POST" action="controllers/VacantesController.php" style="display:inline-block;">
-                  <input type="hidden" name="accion" value="eliminar_vacante">
-                  <input type="hidden" name="id_vacante" value="<?= htmlspecialchars($vac['id_vacante']) ?>">
-                  <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;">Eliminar</button>
-                </form>
+                <!-- Botones de Editar y Eliminar SOLO para el creador -->
+                <?php if ($usuario_actual == $vac['id_usuario']): ?>
+                    <a href="editar_vacante.php?id=<?= htmlspecialchars($vac['id_vacante']) ?>" class="btn-publicar" style="background:#ffc107;color:#222;padding:6px 12px;font-size:0.95rem;border-radius:8px;margin-right:4px;text-decoration:none;display:inline-block;">Editar</a>
+                    <form method="POST" action="controllers/VacantesController.php" style="display:inline-block;">
+                      <input type="hidden" name="accion" value="eliminar_vacante">
+                      <input type="hidden" name="id_vacante" value="<?= htmlspecialchars($vac['id_vacante']) ?>">
+                      <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;">Eliminar</button>
+                    </form>
+                <?php endif; ?>
             </div>
         <?php endforeach; ?>
     </div>
 </div>
 </div>
 
+<!-- Modal para mostrar información completa -->
+<div id="modalVacante" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;color:#222;padding:2rem;border-radius:16px;max-width:400px;width:90%;position:relative;">
+        <button onclick="cerrarModalVacante()" style="position:absolute;top:10px;right:10px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;">&times;</button>
+        <div id="contenidoVacante"></div>
+    </div>
+</div>
+<script>
+function mostrarVacante(data) {
+    var html = `
+        <h2 style="margin-top:0;">${data.titulo}</h2>
+        <p><strong>Empresa:</strong> ${data.empresa}</p>
+        <p><strong>Ubicación:</strong> ${data.ubicacion}</p>
+        <p><strong>Categoría:</strong> ${data.categoria}</p>
+        <p><strong>Salario:</strong> ${data.salario}</p>
+        <p><strong>Descripción:</strong> ${data.descripcion}</p>
+        <p><strong>Publicado por:</strong> ${data.nombre_completo ?? 'Usuario'}</p>
+        <p><strong>Fecha:</strong> ${data.fecha_creacion ? (new Date(data.fecha_creacion)).toLocaleDateString() : ''}</p>
+        <p><strong>ID Vacante:</strong> ${data.id_vacante ?? data.id ?? ''}</p>
+    `;
+    document.getElementById('contenidoVacante').innerHTML = html;
+    document.getElementById('modalVacante').style.display = 'flex';
+}
+function cerrarModalVacante() {
+    document.getElementById('modalVacante').style.display = 'none';
+}
+</script>
+
 </body>
+</html>
 </html>
