@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="public/css/main.css" /> 
   
   <style>
-    /* VARIABLES DE COLOR */
     :root {
       --primary-color: #0d6efd;
       --secondary-color: #0a58ca;
@@ -19,7 +18,6 @@
       --text-secondary: #adb5bd;
     }
     
-    /* ESTILOS GENERALES DEL HEADER */
     .navbar {
       background-color: var(--bg-dark) !important;
       transition: background-color 0.3s ease-in-out;
@@ -47,8 +45,6 @@
     .nav-link:hover {
       color: var(--primary-color) !important;
     }
-
-    /* ESTILO DE BOTONES Y CAMPOS */
     .btn-primary-custom {
       background-color: var(--primary-color);
       border-color: var(--primary-color);
@@ -64,35 +60,23 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(13,110,253,0.3);
     }
-    
-    /* ESTILOS DEL BUSCADOR */
-    .search-bar .input-group .form-control {
-      border-radius: 50px 0 0 50px !important;
-      padding: 0.5rem 1.5rem;
+    .search-bar .form-control {
+      border-radius: 50px;
+      padding-left: 1.5rem;
       background-color: #333;
       border: 1px solid #444;
       color: white;
       transition: all 0.3s ease;
-      border-right: none;
     }
-    .search-bar .input-group .form-control:focus {
+    .search-bar .form-control:focus {
       background-color: #2b2b2b;
       border-color: var(--primary-color);
       box-shadow: 0 0 0 0.25rem rgba(13,110,253,0.25);
     }
-    .search-bar .input-group .input-group-text {
-      border-radius: 0 50px 50px 0 !important;
-      background-color: #333;
-      color: var(--text-secondary);
-      border: 1px solid #444;
-      border-left: none;
-      padding: 0.5rem 1rem;
-    }
     .search-bar {
       width: 100%;
-      max-width: 450px; /* Ancho del buscador */
+      max-width: 500px;
     }
-    
     @media (max-width: 991.98px) {
       .search-bar {
         max-width: 100%;
@@ -125,10 +109,7 @@
       
       <form class="search-bar d-flex me-lg-3" role="search" action="index.php" method="GET">
         <input type="hidden" name="page" value="resultados_busqueda">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Buscar..." aria-label="Search" name="query">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
-        </div>
+        <input type="text" class="form-control" placeholder="Buscar..." aria-label="Search" name="query">
       </form>
       
       <ul class="navbar-nav">
