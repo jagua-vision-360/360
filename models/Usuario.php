@@ -3,12 +3,9 @@ class Usuario {
     private $conn;
 
     public function __construct($db) {
-        $this->conn = $db; // objeto mysqli
+        $this->conn = $db;
     }
 
-    /* ------------------------------------
-       REGISTRAR NUEVO USUARIO CON FOTO
-    -------------------------------------*/
     public function registrar($data) {
         $sql = "INSERT INTO usuarios 
             (id_usuario, nombre_completo, correo, usuario, contrasena, tipo_usuario, telefono, razon_social, direccion, hoja_vida, experiencia, permisos, foto_perfil)
@@ -22,7 +19,7 @@ class Usuario {
         $hash = password_hash($data['contrasena'], PASSWORD_DEFAULT);
 
         $stmt->bind_param(
-            "issssssssssss",
+            "sssssssssssss",
             $data['id_usuario'],
             $data['nombre_completo'],
             $data['correo'],
@@ -41,9 +38,6 @@ class Usuario {
         return $stmt->execute();
     }
 
-    /* ------------------------------------
-       LOGIN DE USUARIO
-    -------------------------------------*/
     public function login($usuario, $contrasena) {
         $sql = "SELECT * FROM usuarios WHERE usuario = ? LIMIT 1";
         $stmt = $this->conn->prepare($sql);
@@ -64,9 +58,6 @@ class Usuario {
         return false;
     }
 
-    /* ------------------------------------
-       ACTUALIZAR FOTO DE PERFIL
-    -------------------------------------*/
     public function actualizarFotoPerfil($id_usuario, $ruta) {
         $sql = "UPDATE usuarios SET foto_perfil = ? WHERE id_usuario = ?";
         $stmt = $this->conn->prepare($sql);
@@ -76,10 +67,17 @@ class Usuario {
         $stmt->bind_param("si", $ruta, $id_usuario);
         return $stmt->execute();
     }
-
-    /* ------------------------------------
-       LISTAR TODOS LOS USUARIOS
-    -------------------------------------*/
+    
+    public function actualizar($id, $nombre, $correo, $telefono, $fotoPerfil) {
+        $sql = "UPDATE usuarios SET nombre_completo = ?, correo = ?, telefono = ?, foto_perfil = ? WHERE id_usuario = ?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            die("Error en prepare: " . $this->conn->error);
+        }
+        $stmt->bind_param("sssss", $nombre, $correo, $telefono, $fotoPerfil, $id);
+        return $stmt->execute();
+    }
+    
     public function obtenerTodos() {
         $sql = "SELECT * FROM usuarios ORDER BY nombre_completo ASC";
         $result = $this->conn->query($sql);

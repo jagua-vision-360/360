@@ -13,7 +13,7 @@
 
       <div class="form-group">
         <label>Foto de perfil</label>
-        <input type="file" name="foto" accept="image/*">
+        <input type="file" name="foto_perfil" accept="image/*">
       </div>
 
       <div class="form-row">

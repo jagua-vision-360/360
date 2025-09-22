@@ -13,21 +13,19 @@ class UsuariosController {
     }
 
     public function registrar($post, $files) {
-        // Validar campos obligatorios
         $required = [
-            'id_usuario','nombre_completo','correo',
-            'usuario','contrasena','tipo_usuario','telefono'
+            'id_usuario', 'nombre_completo', 'correo',
+            'usuario', 'contrasena', 'tipo_usuario', 'telefono'
         ];
         foreach ($required as $r) {
             if (empty($post[$r])) {
                 return [
-                    'success'=>false,
-                    'message'=>"Falta campo $r"
+                    'success' => false,
+                    'message' => "Falta campo $r"
                 ];
             }
         }
-
-        // Procesar foto de perfil si se envía
+        
         $fotoPerfil = null;
         if (isset($files['foto_perfil']) && $files['foto_perfil']['error'] === UPLOAD_ERR_OK) {
             $nombreArchivo = time() . '_' . basename($files['foto_perfil']['name']);
@@ -37,16 +35,15 @@ class UsuariosController {
             }
         }
 
-        // Agregar el nombre de la foto al array de datos
         $post['foto_perfil'] = $fotoPerfil;
 
         try {
             $ok = $this->model->registrar($post);
             return $ok
-                ? ['success'=>true]
-                : ['success'=>false,'message'=>'No se pudo insertar el usuario.'];
+                ? ['success' => true]
+                : ['success' => false, 'message' => 'No se pudo insertar el usuario.'];
         } catch (Exception $e) {
-            return ['success'=>false,'message'=>$e->getMessage()];
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -58,9 +55,9 @@ class UsuariosController {
 
         if ($data) {
             $_SESSION['usuario'] = $data;
-            return ['success'=>true,'data'=>$data];
+            return ['success' => true, 'data' => $data];
         }
-        return ['success'=>false,'message'=>'Credenciales incorrectas'];
+        return ['success' => false, 'message' => 'Credenciales incorrectas'];
     }
 
     public function actualizarPerfil($post, $files) {
@@ -86,13 +83,12 @@ class UsuariosController {
             $_SESSION['usuario']['telefono'] = $telefono;
             $_SESSION['usuario']['foto_perfil'] = $fotoPerfil;
 
-            return ['success'=>true];
+            return ['success' => true];
         }
-        return ['success'=>false,'message'=>'No se pudo actualizar el perfil.'];
+        return ['success' => false, 'message' => 'No se pudo actualizar el perfil.'];
     }
 }
 
-// --- Manejo directo del POST ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
     $ctrl = new UsuariosController();
