@@ -57,44 +57,47 @@ $icono_url_actual = $iconos_servicio[$nombre_servicio_actual] ?? $iconos_servici
 
 <link rel="stylesheet" href="estilos/main-unificado.css"> 
 <style>
-/* Estilos específicos para la página de edición de servicio */
+/* Estilos para edición de servicio igual a editar_vacante.php */
+body {
+    background: #181818;
+    color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 .edit-service-wrapper {
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Alinea al inicio verticalmente */
+    align-items: flex-start;
     padding: 3rem 1rem;
-    min-height: calc(100vh - 120px - 100px); /* Ajusta para header y footer */
+    min-height: calc(100vh - 120px - 100px);
 }
-
 .edit-service-card {
-    background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
-    padding: 2.5rem;
-    border-radius: 18px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-    border: 1px solid #2f2f2f;
-    animation: fadeIn 0.6s ease;
+    background: #23213a;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    border: 1px solid #333;
+    animation: fadeIn 0.5s ease;
     width: 100%;
-    max-width: 600px; /* Ancho máximo para el formulario */
+    max-width: 500px;
     text-align: center;
 }
-
 .edit-service-title {
-    color: #ffffff;
-    font-size: 2.2rem;
+    color: #fff;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     text-align: center;
+    border-left: 3px solid #0d6efd;
+    padding-left: 10px;
 }
-
 .edit-service-card label {
-    color: #bbb;
+    color: #ccc;
     margin-bottom: 8px;
     font-size: 0.95rem;
     font-weight: 500;
-    display: block; /* Asegura que la etiqueta esté en su propia línea */
+    display: block;
     text-align: left;
 }
-
 .edit-service-card .form-control {
     padding: 12px;
     border: 1px solid #444;
@@ -106,17 +109,15 @@ $icono_url_actual = $iconos_servicio[$nombre_servicio_actual] ?? $iconos_servici
     width: 100%;
     margin-bottom: 1.5rem;
 }
-
 .edit-service-card .form-control:focus {
     border-color: #0d6efd;
     outline: none;
     box-shadow: 0 0 8px rgba(13,110,253,0.7);
 }
-
 .btn-actualizar {
     margin-top: 1.5rem;
     padding: 15px 30px;
-    background: linear-gradient(135deg, #28a745, #218838); /* Verde para actualizar */
+    background: #198754;
     border: none;
     border-radius: 12px;
     color: white;
@@ -126,13 +127,11 @@ $icono_url_actual = $iconos_servicio[$nombre_servicio_actual] ?? $iconos_servici
     transition: all 0.3s ease;
     width: 100%;
 }
-
 .btn-actualizar:hover {
-    background: linear-gradient(135deg, #218838, #1e7e34);
+    background: #157347;
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
 }
-
 .current-icon-display {
     text-align: center;
     margin-bottom: 2rem;
@@ -150,6 +149,10 @@ $icono_url_actual = $iconos_servicio[$nombre_servicio_actual] ?? $iconos_servici
     color: #f8f9fa;
     margin: 0;
     font-weight: 500;
+}
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
 }
 </style>
 
@@ -188,3 +191,36 @@ $icono_url_actual = $iconos_servicio[$nombre_servicio_actual] ?? $iconos_servici
                     foreach ($categorias as $cat) {
                         $selected = ($cat === $servicio_a_editar['nombre_servicio']) ? 'selected' : '';
                         echo '<option value="' . htmlspecialchars($cat) . '" ' . $selected . '>' . htmlspecialchars($cat) . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="descripcion_servicio">Descripción del servicio</label>
+                <textarea class="form-control" id="descripcion_servicio" name="descripcion_servicio" rows="4" required><?= htmlspecialchars($servicio_a_editar['descripcion_servicio']) ?></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="precio_servicio">Precio del servicio (USD)</label>
+                <input type="number" class="form-control" id="precio_servicio" name="precio_servicio" step="0.01" min="0" value="<?= htmlspecialchars($servicio_a_editar['precio_servicio']) ?>" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="duracion_servicio">Duración estimada (horas)</label>
+                <input type="number" class="form-control" id="duracion_servicio" name="duracion_servicio" step="0.1" min="0" value="<?= htmlspecialchars($servicio_a_editar['duracion_servicio']) ?>" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="requisitos_servicio">Requisitos del servicio</label>
+                <textarea class="form-control" id="requisitos_servicio" name="requisitos_servicio" rows="3"><?= htmlspecialchars($servicio_a_editar['requisitos_servicio']) ?></textarea>
+            </div>
+
+            <button type="submit" class="btn-actualizar">Actualizar Servicio</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Script para manejar la lógica adicional si es necesario
+</script>

@@ -1,5 +1,7 @@
 <?php
-// No uses session_start() aquí porque ya lo haces en index.php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../config/database.php';
 
 // Traer todas las postulaciones
@@ -75,10 +77,14 @@ if ($stmt) {
               <th>ID Vacante</th>
               <th>Fecha de postulación</th>
               <th>Estado</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($postulaciones as $p): ?>
+            <?php
+            $usuario_actual = $_SESSION['usuario']['id_usuario'] ?? null;
+            foreach ($postulaciones as $p):
+            ?>
               <tr>
                 <td><?= htmlspecialchars($p['id_postulacion'] ?? '') ?></td>
                 <td><?= htmlspecialchars($p['id_usuario'] ?? '') ?></td>
@@ -95,6 +101,16 @@ if ($stmt) {
                   <span style="font-weight:bold;color:<?= $color ?>;text-transform:capitalize;">
                     <?= htmlspecialchars($p['estado'] ?? '') ?>
                   </span>
+                </td>
+                <td>
+                  <?php if ($usuario_actual && $usuario_actual == $p['id_usuario']): ?>
+                    <!-- Solo botón Eliminar -->
+                    <form method="POST" action="controllers/PostulacionesController.php" style="display:inline-block;width:auto;">
+                      <input type="hidden" name="accion" value="eliminar_postulacion">
+                      <input type="hidden" name="id_postulacion" value="<?= htmlspecialchars($p['id_postulacion']) ?>">
+                      <button type="submit" class="btn-publicar" style="background:#dc3545;color:#fff;padding:6px 12px;font-size:0.95rem;border-radius:8px;width:auto;">Eliminar</button>
+                    </form>
+                  <?php endif; ?>
                 </td>
               </tr>
             <?php endforeach; ?>
